@@ -11,7 +11,7 @@ def Train_Model(PATH):
   df = pd.read_csv(PATH)
   x = list(df['sentence'])
   y = list(df['law'])
-  x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_estate=42)
+  x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
   LawClf = Pipeline([('tfidf', TfidfVectorizer()),
                 ('model', LogisticRegression()
                )])
@@ -22,11 +22,11 @@ def Train_Model(PATH):
 def Clf_Report(PATH, save_model=False):
   LawClf, x_test, y_test = Train_Model(PATH)
   y_predict = LawClf.predict(x_test)
-  report = classification_report(y_predict, y_test)
+  report = classification_report(y_test, y_predict)
   print(report)
   if save_model:
     joblib.dump(LawClf, 'LawClf.joblib')
   return report
     
-if __main__ == '__main__':
+if __name__ == '__main__':
   Clf_Report(PATH, save_model=True)
