@@ -14,7 +14,7 @@ class Law:
       raise Exception("Law List Is Empty")
   def __prepare(self):
     self.ensure_law()
-    RuleClf = joblib.load('Rule.Clf')
+    RuleClf = joblib.load('RuleClf.joblib')
     rule_soft_type = RuleClf.predict_proba(self.law)
     rule_soft_type = pd.DataFrame(rule_soft_type, columns=RuleClf.classes_)
     rule_soft_type.insert(0, 'sents', self.law)
