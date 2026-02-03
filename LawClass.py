@@ -63,8 +63,12 @@ class Law:
     maxv = df['Percentage'].max()
     df = df[df['Percentage'] > maxv - margin]
     if len(df) == 1:
+      self.mix = False
+      self.type = df['Law Type'].iloc[0]
       return df['Law Type'].iloc[0]
     else:
+      self.mix = True
+      self.type = df[['Law Type', 'Percentage']].sort_values(by=['Percentage'], ascending=False).reset_index(drop=True)
       return df[['Law Type', 'Percentage']].sort_values(by=['Percentage'], ascending=False).reset_index(drop=True)
 
   def legal_function(self):
@@ -113,4 +117,83 @@ class Law:
       return self.und
     self.__prepare()
     return self.und 
-    
+  def DESC(self):
+    self.type()
+    self.__prepare()
+    if not self.mix:
+      report = f"""
+Your law has been classified primarily as {self.type}.
+This means the majority of its rules operate within the logic and structure typical of that legal domain.
+The system analyzed the text sentence by sentence and grouped each rule according to its functional role inside the law.
+
+--- DEFINITIONS ---
+The following sentences introduce or clarify key terms used throughout the law.
+These definitions form the conceptual foundation of the document:
+
+{self.defs}
+
+--- OBLIGATIONS ---
+These rules impose duties or required actions:
+
+{self.oblgs}
+
+--- PROHIBITIONS ---
+These rules describe conduct that is forbidden:
+
+{self.prohs}
+
+--- SANCTIONS ---
+These rules specify consequences for violations:
+
+{self.sancs}
+
+--- EXCEPTIONS ---
+These rules limit or suspend the application of other provisions under specific conditions:
+
+{self.exceps}
+
+--- UNDETERMINED RULES ---
+Some sentences could not be assigned with high confidence to a single category:
+
+{self.und}
+"""
+    else:
+      types = list(self.type['Law Type'])
+      report = f"""
+This document represents a mixed legal structure.
+It combines elements of the following law types: {types}.
+This is common in comprehensive frameworks that operate across multiple legal domains.
+
+The functional breakdown of the rules is shown below.
+
+--- DEFINITIONS ---
+These sentences establish key legal terms:
+
+{self.defs}
+
+--- OBLIGATIONS ---
+Rules imposing duties or required actions:
+
+{self.oblgs}
+
+--- PROHIBITIONS ---
+Rules describing forbidden conduct:
+
+{self.prohs}
+
+--- SANCTIONS ---
+Rules defining consequences of violations:
+
+{self.sancs}
+
+--- EXCEPTIONS ---
+Rules limiting or modifying other provisions:
+
+{self.exceps}
+
+--- UNDETERMINED RULES ---
+Sentences that overlap categories or lack classification certainty:
+
+{self.und}
+"""
+    print(report)

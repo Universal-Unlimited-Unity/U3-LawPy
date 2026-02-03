@@ -38,23 +38,5 @@ law = [
 ]
 
 law = Law(law)
-
-print(law.rules_types())
-print(law.types_ratio())
-print(law.type())
-print(law.legal_function_probs())
-print(law.legal_function())
-
-print("defs")
-print(law.definitions())
-print("oblgs")
-print(law.obligations())
-print("exps")
-print(law.exceptions())
-print("sancts")
-print(law.sanctions())
-print("prohs")
-print(law.prohibitions())
-print('undetermined')
-print(law.undetermined())
+law.DESC()
 
